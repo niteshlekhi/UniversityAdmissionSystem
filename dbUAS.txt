@@ -1,0 +1,175 @@
+CREATE TABLE [dbo].[tbadmin](
+	[admid] [int] IDENTITY(1,1) NOT NULL,
+	[admname] [varchar](50) NOT NULL,
+	[admemail] [varchar](50) NOT NULL,
+	[admpwd] [varchar](50) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[admid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[admemail] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[tbadmission](
+	[aid] [int] IDENTITY(1,1) NOT NULL,
+	[aappid] [int] NOT NULL,
+	[asid] [int] NOT NULL,
+	[adid] [int] NOT NULL,
+	[acid] [int] NOT NULL,
+	[asts] [int] NOT NULL,
+ CONSTRAINT [PK__tbadmiss__DE508E2E4C7D3078] PRIMARY KEY CLUSTERED 
+(
+	[aid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tbadmission]  WITH CHECK ADD  CONSTRAINT [FK_tbadmission_Totbcourse] FOREIGN KEY([acid])
+REFERENCES [dbo].[tbcourse] ([cid])
+GO
+
+ALTER TABLE [dbo].[tbadmission] CHECK CONSTRAINT [FK_tbadmission_Totbcourse]
+GO
+
+ALTER TABLE [dbo].[tbadmission]  WITH CHECK ADD  CONSTRAINT [FK_tbadmission_Totbdepartment] FOREIGN KEY([adid])
+REFERENCES [dbo].[tbdepartment] ([did])
+GO
+
+ALTER TABLE [dbo].[tbadmission] CHECK CONSTRAINT [FK_tbadmission_Totbdepartment]
+GO
+
+ALTER TABLE [dbo].[tbadmission]  WITH CHECK ADD  CONSTRAINT [FK_tbadmission_Totbstream] FOREIGN KEY([asid])
+REFERENCES [dbo].[tbstream] ([sid])
+GO
+
+ALTER TABLE [dbo].[tbadmission] CHECK CONSTRAINT [FK_tbadmission_Totbstream]
+GO
+
+ALTER TABLE [dbo].[tbadmission]  WITH CHECK ADD  CONSTRAINT [FK_tbadmission_Totbstudent] FOREIGN KEY([aappid])
+REFERENCES [dbo].[tbapplicant] ([appid])
+GO
+
+ALTER TABLE [dbo].[tbadmission] CHECK CONSTRAINT [FK_tbadmission_Totbstudent]
+GO
+
+CREATE TABLE [dbo].[tbapplicant](
+	[appid] [int] IDENTITY(1,1) NOT NULL,
+	[appfname] [varchar](50) NOT NULL,
+	[appfcontact] [varchar](20) NOT NULL,
+	[appname] [varchar](50) NOT NULL,
+	[appemail] [varchar](50) NOT NULL,
+	[apppwd] [varchar](50) NOT NULL,
+	[appcontact] [varchar](20) NOT NULL,
+	[appaddress] [varchar](300) NOT NULL,
+	[appgender] [varchar](3) NOT NULL,
+	[appDOB] [date] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[appid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[tbcourse](
+	[cid] [int] IDENTITY(1,1) NOT NULL,
+	[cname] [varchar](50) NOT NULL,
+	[cdid] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[cid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tbcourse]  WITH CHECK ADD  CONSTRAINT [FK_tbcourse_Totbdepartment] FOREIGN KEY([cdid])
+REFERENCES [dbo].[tbdepartment] ([did])
+GO
+
+ALTER TABLE [dbo].[tbcourse] CHECK CONSTRAINT [FK_tbcourse_Totbdepartment]
+GO
+
+CREATE TABLE [dbo].[tbdepartment](
+	[did] [int] IDENTITY(1,1) NOT NULL,
+	[dname] [varchar](50) NOT NULL,
+	[dsid] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[did] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tbdepartment]  WITH CHECK ADD  CONSTRAINT [FK_tbdepartment_Totbstream] FOREIGN KEY([dsid])
+REFERENCES [dbo].[tbstream] ([sid])
+GO
+
+ALTER TABLE [dbo].[tbdepartment] CHECK CONSTRAINT [FK_tbdepartment_Totbstream]
+GO
+
+CREATE TABLE [dbo].[tbeducation](
+	[eid] [int] IDENTITY(1,1) NOT NULL,
+	[eappid] [int] NOT NULL,
+	[yop_10] [int] NULL,
+	[board_10] [varchar](30) NULL,
+	[percent_10] [int] NULL,
+	[yop_12] [int] NULL,
+	[board_12] [varchar](30) NULL,
+	[percent_12] [int] NULL,
+	[yop_grad] [int] NULL,
+	[univ_grad] [varchar](30) NULL,
+	[percent_grad] [int] NULL,
+ CONSTRAINT [PK__tbeducat__D9509F6D872858AE] PRIMARY KEY CLUSTERED 
+(
+	[eid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_yop_10]  DEFAULT ((0)) FOR [yop_10]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_board_10]  DEFAULT ('') FOR [board_10]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_percent_10]  DEFAULT ((0)) FOR [percent_10]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_yop_12]  DEFAULT ((0)) FOR [yop_12]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_board_12]  DEFAULT ('') FOR [board_12]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_percent_12]  DEFAULT ((0)) FOR [percent_12]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_yop_grad]  DEFAULT ((0)) FOR [yop_grad]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_univ_grad]  DEFAULT ('') FOR [univ_grad]
+GO
+
+ALTER TABLE [dbo].[tbeducation] ADD  CONSTRAINT [DF_tbeducation_percent_grad]  DEFAULT ((0)) FOR [percent_grad]
+GO
+
+ALTER TABLE [dbo].[tbeducation]  WITH CHECK ADD  CONSTRAINT [FK_tbeducation_Totbstudent] FOREIGN KEY([eappid])
+REFERENCES [dbo].[tbapplicant] ([appid])
+GO
+
+ALTER TABLE [dbo].[tbeducation] CHECK CONSTRAINT [FK_tbeducation_Totbstudent]
+GO
+
+CREATE TABLE [dbo].[tbstream](
+	[sid] [int] IDENTITY(1,1) NOT NULL,
+	[sname] [varchar](50) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[sid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
