@@ -14,7 +14,7 @@ namespace UniversityAdmissionSystem.Controllers
     {
         //  API METHOD TO Register THE APPLICANT
         [HttpPost]
-        public void Register(Applicant applicant)
+        public int Register(Applicant applicant)
         {
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UASDBContext"].ConnectionString);
             conn.Open();
@@ -28,17 +28,22 @@ namespace UniversityAdmissionSystem.Controllers
             cmd.Parameters.Add(new SqlParameter("@appaddress", applicant.appaddress));
             cmd.Parameters.Add(new SqlParameter("@appgender", applicant.appgender));
             cmd.Parameters.Add(new SqlParameter("@appDOB", applicant.appDOB));
-            cmd.ExecuteNonQuery();
+           int result= cmd.ExecuteNonQuery();
             cmd.Dispose();
-            conn.Close();
+           
+
+            SqlCommand cmd2 = new SqlCommand("select appid from tbapplicant where appemail=@appemail", conn);
+            cmd2.Parameters.Add(new SqlParameter("@appemail", applicant.appemail));
+            applicant.appid = Convert.ToInt32(cmd2.ExecuteScalar());
             AddEmptyEducation(applicant.appid);
+            return result;
         }
 
         public void AddEmptyEducation(int Id)
         {
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UASDBContext"].ConnectionString);
             conn.Open();
-            SqlCommand cmd = new SqlCommand("insert into tbeducation values(@eappid)", conn);
+            SqlCommand cmd = new SqlCommand("insert into tbeducation values(@eappid,0,NULL,0,0,NULL,0,0,NULL,0)", conn);
             cmd.Parameters.Add(new SqlParameter("@eappid", Id));
             cmd.ExecuteNonQuery();
             cmd.Dispose();

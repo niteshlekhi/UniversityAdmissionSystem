@@ -52,9 +52,31 @@ namespace UniversityAdmissionSystem.Controllers
             cmd.Parameters.Add(new SqlParameter("@did", id));
             SqlDataReader reader = cmd.ExecuteReader();
             List<Department> lst = new List<Department>();
-            Department dept = new Department();
             while (reader.Read())
             {
+                Department dept = new Department();
+                dept.did = int.Parse(reader["did"].ToString());
+                dept.dname = reader["dname"].ToString();
+                dept.dsid = int.Parse(reader["dsid"].ToString());
+                lst.Add(dept);
+            }
+            return lst;
+        }
+
+        // GET: Method to GET Department based on Stream ID
+        [Route("api/Department/GetDeptFromStream/{streamId}")]
+        [HttpGet]
+        public List<Department>GetDeptFromStream(int streamId)
+        {
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UASDBContext"].ConnectionString);
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("select * from tbdepartment where dsid=@sid", conn);
+            cmd.Parameters.Add(new SqlParameter("@sid", streamId));
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<Department> lst = new List<Department>();
+            while (reader.Read())
+            {
+                Department dept = new Department();
                 dept.did = int.Parse(reader["did"].ToString());
                 dept.dname = reader["dname"].ToString();
                 dept.dsid = int.Parse(reader["dsid"].ToString());
@@ -100,5 +122,7 @@ namespace UniversityAdmissionSystem.Controllers
             else
                 return false;
         }
+
+       
     }
 }

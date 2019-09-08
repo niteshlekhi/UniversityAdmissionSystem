@@ -53,9 +53,9 @@ namespace UniversityAdmissionSystem.Controllers
             cmd.Parameters.Add(new SqlParameter("@cid", id));
             SqlDataReader reader = cmd.ExecuteReader();
             List<Course> lst = new List<Course>();
-            Course course = new Course();
             while (reader.Read())
             {
+                Course course = new Course();
                 course.cid = int.Parse(reader["cid"].ToString());
                 course.cname = reader["cname"].ToString();
                 course.cdid = int.Parse(reader["cdid"].ToString());
@@ -100,6 +100,27 @@ namespace UniversityAdmissionSystem.Controllers
                 return true;
             else
                 return false;
+        }
+
+        [Route("api/Course/GetCourseFromDept/{deptId}")]
+        [HttpGet]
+        public List<Course> GetCourseFromDept(int deptId)
+        {
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UASDBContext"].ConnectionString);
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("select * from tbcourse where cdid=@did", conn);
+            cmd.Parameters.Add(new SqlParameter("@did", deptId));
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<Course> lst = new List<Course>();
+            while (reader.Read())
+            {
+                Course course = new Course();
+                course.cid = int.Parse(reader["cid"].ToString());
+                course.cname = reader["cname"].ToString();
+                course.cdid = int.Parse(reader["cdid"].ToString());
+                lst.Add(course);
+            }
+            return lst;
         }
     }
 }
